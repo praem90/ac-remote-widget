@@ -1,18 +1,27 @@
 import { ChevronDown, ChevronsDown, ChevronUp, Fan, Power, Snowflake, Waves } from "lucide-react";
 import type { Route } from "./+types/home";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Progress } from "~/components/ui/progress";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "AC Remote control" },
+    { name: "description", content: "Remote control widget for AC" },
   ];
 }
 
 export default function Home() {
     const [state, setState] = useState({power: true, mode: 1, temp: 16, fan: 1});
+    useEffect( () => {
+        fetch("http://192.168.1.8/state", {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(state),
+        });
+    }, [state]);
     return (
     <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="w-full flex-grow flex items-center">
