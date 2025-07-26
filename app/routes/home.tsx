@@ -2,7 +2,6 @@ import { ChevronDown, ChevronUp, Fan, Power, Snowflake, Waves } from "lucide-rea
 import type { Route } from "./+types/home";
 import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
-import { Progress } from "~/components/ui/progress";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -35,17 +34,19 @@ export default function Home() {
                       const r = max === i ? 125 : Math.abs(max-i) === 1 ? 122 : 120;
                       const delta = 3;
                       return (
-                          <div
-                              className={`absolute w-[1px] h-4 ms-1 ${i <= max ? 'bg-blue-500' : 'bg-gray-500'} rotate-(--pipe-rotation) translate-x-(--tw-translate-x)`}
+                          <span
+                              className={`absolute w-[1px] h-4 ms-1 ${i <= max+1 ? 'bg-blue-500' : 'bg-gray-500'} rotate-(--pipe-rotation) translate-x-(--tw-translate-x) transition delay-150 ease-out`}
                               style={{
                                     "--pipe-rotation": ((i*delta) - 120)+'deg',
                                     "--tw-translate-x":  1 * r * Math.cos((210-i*delta)*Math.PI/180) + "px",
                                     "--tw-translate-y":  -1 * r * Math.sin((210-i*delta)*Math.PI/180) + "px"
-                                }}></div>
+                                }}></span>
                               );
                   })}
               </div>
-              <Progress value={(state.temp - 16) * 100/20} />
+              <div className="bg-gray-300 w-full rounded-full">
+                  <div className="bg-blue-500 h-2 rounded-full transition-width duration-300 ease-in-out" style={{"width": Math.ceil((state.temp - 16)*100/20) + '%'}}></div>
+              </div>
           </div>
       </div>
       <div className="w-full flex flex-col flex-grow justify-around">
