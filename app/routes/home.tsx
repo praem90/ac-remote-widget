@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp, Fan, Power, Snowflake, Waves } from "lucide-react";
 import type { Route } from "./+types/home";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type SyntheticEvent } from "react";
 import { Button } from "~/components/ui/button";
 
 export function meta({}: Route.MetaArgs) {
@@ -21,8 +21,19 @@ export default function Home() {
             body: JSON.stringify(state),
         });
     }, [state]);
+
+    const onTouchMove = (e: any) => {
+        const touch = e.touches[0]
+        if (!touch) {
+            return
+        }
+
+        state.temp = Math.max(Math.ceil((touch.clientX * 20 / window.innerWidth) + 16), 16)
+        setState({...state})
+    };
+
     return (
-    <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+        <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10" onTouchMove={onTouchMove}>
       <div className="w-full flex-grow flex items-center">
           <div className="w-full flex flex-col">
               <div className="relative mb-4 font-thin text-blue-300">
@@ -35,6 +46,7 @@ export default function Home() {
                       const delta = 3;
                       return (
                           <span
+                              key={i}
                               className={`absolute w-[1px] h-4 ms-1 ${i <= max+1 ? 'bg-blue-500' : 'bg-gray-500'} rotate-(--pipe-rotation) translate-x-(--tw-translate-x) transition duration-300 ease-out`}
                               style={{
                                     "--pipe-rotation": ((i*delta) - 120)+'deg',
@@ -44,7 +56,7 @@ export default function Home() {
                               );
                   })}
               </div>
-              <div className="bg-gray-300 w-full rounded-full relative">
+              <div className="bg-gray-300 w-full rounded-full relative my-3" onClick={e => {state.temp = Math.max(Math.ceil(e.clientX*20/window.innerWidth) + 16, 16); setState({...state});}}>
                   <div className="bg-blue-400 h-2 rounded-full transition-width duration-300 ease-in-out" style={{"width": Math.ceil((state.temp - 16)*100/20) + '%'}}></div>
                   <div className="absolute bg-blue-500 size-3 rounded-full -top-[3px] left-0 transition-translate duration-300 ease-in-out" style={{"left": `calc(${Math.ceil((state.temp - 16)*100/20) + '%'} - 3px)`}}></div>
               </div>
