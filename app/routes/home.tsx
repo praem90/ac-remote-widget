@@ -35,7 +35,7 @@ export default function Home() {
                       const delta = 3;
                       return (
                           <span
-                              className={`absolute w-[1px] h-4 ms-1 ${i <= max+1 ? 'bg-blue-500' : 'bg-gray-500'} rotate-(--pipe-rotation) translate-x-(--tw-translate-x) transition delay-150 ease-out`}
+                              className={`absolute w-[1px] h-4 ms-1 ${i <= max+1 ? 'bg-blue-500' : 'bg-gray-500'} rotate-(--pipe-rotation) translate-x-(--tw-translate-x) transition duration-300 ease-out`}
                               style={{
                                     "--pipe-rotation": ((i*delta) - 120)+'deg',
                                     "--tw-translate-x":  1 * r * Math.cos((210-i*delta)*Math.PI/180) + "px",
@@ -44,8 +44,9 @@ export default function Home() {
                               );
                   })}
               </div>
-              <div className="bg-gray-300 w-full rounded-full">
-                  <div className="bg-blue-500 h-2 rounded-full transition-width duration-300 ease-in-out" style={{"width": Math.ceil((state.temp - 16)*100/20) + '%'}}></div>
+              <div className="bg-gray-300 w-full rounded-full relative">
+                  <div className="bg-blue-400 h-2 rounded-full transition-width duration-300 ease-in-out" style={{"width": Math.ceil((state.temp - 16)*100/20) + '%'}}></div>
+                  <div className="absolute bg-blue-500 size-3 rounded-full -top-[3px] left-0 transition-translate duration-300 ease-in-out" style={{"left": `calc(${Math.ceil((state.temp - 16)*100/20) + '%'} - 3px)`}}></div>
               </div>
           </div>
       </div>
