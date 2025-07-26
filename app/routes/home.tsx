@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronsDown, ChevronUp, Fan, Power, Snowflake, Waves } from "lucide-react";
+import { ChevronDown, ChevronUp, Fan, Power, Snowflake, Waves } from "lucide-react";
 import type { Route } from "./+types/home";
 import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
@@ -26,8 +26,24 @@ export default function Home() {
     <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="w-full flex-grow flex items-center">
           <div className="w-full flex flex-col">
-              <div className="flex items-center justify-center mb-4 text-7xl font-thin text-blue-300">
+              <div className="relative mb-4 font-thin text-blue-300">
+              </div>
+              <div className="flex items-center justify-center relative mb-4 text-7xl font-thin text-blue-300">
                   <span className="border rounded-full size-50 flex items-center justify-center">{state.temp}<sup>&deg;</sup>c</span>
+                  {[...Array(81)].map((v,i) => {
+                      const max = Math.ceil((state.temp - 16)*81/20);
+                      const r = max === i ? 125 : Math.abs(max-i) === 1 ? 122 : 120;
+                      const delta = 3;
+                      return (
+                          <div
+                              className={`absolute w-[1px] h-4 ms-1 ${i <= max ? 'bg-blue-500' : 'bg-gray-500'} rotate-(--pipe-rotation) translate-x-(--tw-translate-x)`}
+                              style={{
+                                    "--pipe-rotation": ((i*delta) - 120)+'deg',
+                                    "--tw-translate-x":  1 * r * Math.cos((210-i*delta)*Math.PI/180) + "px",
+                                    "--tw-translate-y":  -1 * r * Math.sin((210-i*delta)*Math.PI/180) + "px"
+                                }}></div>
+                              );
+                  })}
               </div>
               <Progress value={(state.temp - 16) * 100/20} />
           </div>
