@@ -12,6 +12,8 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
     const [state, setState] = useState({power: true, mode: 1, temp: 16, fan: 1});
+    const [touched, setTouched] = useState(false);
+
     useEffect( () => {
         fetch("http://192.168.1.8/state", {
             method: "PUT",
@@ -33,7 +35,7 @@ export default function Home() {
     };
 
     return (
-        <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10" onTouchMove={onTouchMove}>
+        <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10" onTouchStart={() => setTouched(true)} onTouchEnd={() => setTouched(false)} onTouchMove={onTouchMove}>
       <div className="w-full flex-grow flex items-center">
           <div className="w-full flex flex-col">
               <div className="relative mb-4 font-thin text-blue-300">
@@ -58,7 +60,7 @@ export default function Home() {
               </div>
               <div className="bg-gray-300 w-full rounded-full relative my-3" onClick={e => {state.temp = Math.max(Math.ceil(e.clientX*20/window.innerWidth) + 16, 16); setState({...state});}}>
                   <div className="bg-blue-400 h-2 rounded-full transition-width duration-300 ease-in-out" style={{"width": Math.ceil((state.temp - 16)*100/20) + '%'}}></div>
-                  <div className="absolute bg-blue-500 size-3 rounded-full -top-[3px] left-0 transition-translate duration-300 ease-in-out" style={{"left": `calc(${Math.ceil((state.temp - 16)*100/20) + '%'} - 3px)`}}></div>
+                  <div className={`absolute bg-blue-500 size-3 ${touched ? 'scale-140' : ''} rounded-full -top-[3px] left-0 transition-translate transition-scale duration-300 ease-in-out`} style={{"left": `calc(${Math.ceil((state.temp - 16)*100/20) + '%'} - 3px)`}}></div>
               </div>
           </div>
       </div>
